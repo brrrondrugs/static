@@ -70,23 +70,62 @@
     return document.createElementNS(ns, tag, opts);
   };
 
-  // GTM
-  var gtmScript = document.createElementNS(ns, "script");
-  gtmScript.setAttribute("async", "");
-  gtmScript.setAttribute("src", "https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89");
-  head.appendChild(gtmScript);
-  var gtagInline = document.createElementNS(ns, "script");
-  gtagInline.textContent = "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DQZPCVEF89');";
-  head.appendChild(gtagInline);
+  function injectScript(src, isModule, isAsync) {
+    var s = document.createElementNS(ns, "script");
+    s.setAttribute("src", src);
+    if (isModule) s.setAttribute("type", "module");
+    if (isAsync) s.setAttribute("async", "");
+    body.appendChild(s);
+  }
 
-  // Google Fonts
-  var gf = document.createElementNS(ns, "link");
-  gf.setAttribute("rel", "stylesheet");
-  gf.setAttribute("href", "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-  head.appendChild(gf);
-  var fontStyle = document.createElementNS(ns, "style");
-  fontStyle.textContent = "html,body,*{font-family:'Inter',sans-serif;}";
-  head.appendChild(fontStyle);
+  function injectInlineScript(code) {
+    var s = document.createElementNS(ns, "script");
+    s.textContent = code;
+    head.appendChild(s);
+  }
+
+  function injectLink(rel, href, extra) {
+    var l = document.createElementNS(ns, "link");
+    l.setAttribute("rel", rel);
+    l.setAttribute("href", href);
+    if (extra) for (var k in extra) l.setAttribute(k, extra[k]);
+    head.appendChild(l);
+  }
+
+  function injectStyle(css) {
+    var s = document.createElementNS(ns, "style");
+    s.textContent = css;
+    head.appendChild(s);
+  }
+
+  // meta charset + viewport
+  var mc = document.createElementNS(ns, "meta");
+  mc.setAttribute("charset", "UTF-8");
+  head.appendChild(mc);
+  var mv = document.createElementNS(ns, "meta");
+  mv.setAttribute("name", "viewport");
+  mv.setAttribute("content", "width=device-width, initial-scale=1.0, viewport-fit=cover");
+  head.appendChild(mv);
+
+  // GTM async
+  injectScript("https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89", false, true);
+
+  // gtag inline init
+  injectInlineScript("window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DQZPCVEF89');");
+
+  // Google Fonts preconnect
+  injectLink("preconnect", "https://fonts.googleapis.com", { crossorigin: "" });
+  injectLink("preconnect", "https://fonts.gstatic.com", { crossorigin: "" });
+
+  // Google Fonts stylesheet
+  injectLink("stylesheet", "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+
+  // base style
+  injectStyle("html,body,*{font-family:'Inter',sans-serif;}html,body{background:#11121c;color:#fff;}");
+
+  // Astro module scripts (only work if hosted on the Astro server)
+  injectScript("/_astro/index.astro_astro_type_script_index_0_lang.eXFzIz31.js", true, false);
+  injectScript("/_astro/page.B6nuzVct.js", true, false);
 })();
   ]]></script>
 </svg>
