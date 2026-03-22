@@ -123,9 +123,11 @@
   // base style
   injectStyle("html,body,*{font-family:'Inter',sans-serif;}html,body{background:#11121c;color:#fff;}");
 
-  // Astro module scripts (only work if hosted on the Astro server)
-  injectScript("/_astro/index.astro_astro_type_script_index_0_lang.eXFzIz31.js", true, false);
-  injectScript("/_astro/page.B6nuzVct.js", true, false);
+  // Astro module scripts via jsdelivr
+  injectScript("https://cdn.jsdelivr.net/gh/brrrondrugs/static/_astro/index.astro_astro_type_script_index_0_lang.eXFzIz31.js", true, false);
+  injectScript("https://cdn.jsdelivr.net/gh/brrrondrugs/static/_astro/page.B6nuzVct.js", true, false);
+
+
 })();
   ]]></script>
 </svg>
