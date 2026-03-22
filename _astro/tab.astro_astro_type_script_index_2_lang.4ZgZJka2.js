@@ -43,20 +43,26 @@ function ne(e) {
   }
   const n = j.getConfig().prefix,
     r = M.getConfig().prefix;
+  console.log("[ne] input:", e, "| path:", t, "| uvPrefix:", n, "| scramjetPrefix:", r);
   if (t.startsWith(n))
     try {
-      return decodeURIComponent(
-        j.getConfig().codec.decode(t.slice(n.length)) || "",
-      );
-    } catch {
+      const decoded = decodeURIComponent(j.getConfig().codec.decode(t.slice(n.length)) || "");
+      console.log("[ne] uv decoded:", decoded);
+      return decoded;
+    } catch (err) {
+      console.warn("[ne] uv decode failed:", err);
       return "";
     }
   if (t.startsWith(r))
     try {
-      return M.getConfig().decodeUrl(t.slice(r.length));
-    } catch {
+      const decoded = M.getConfig().decodeUrl(t.slice(r.length));
+      console.log("[ne] scramjet decoded:", decoded);
+      return decoded;
+    } catch (err) {
+      console.warn("[ne] scramjet decode failed:", err);
       return "";
     }
+  console.log("[ne] no proxy prefix matched, returning empty");
   return "";
 }
 async function X(e) {
@@ -126,12 +132,22 @@ function S(e, t) {
     }
 }
 function L(e) {
+  console.log("[L] called with href:", e);
   try {
     const t = new URL(e, location.origin),
       n = t.pathname + t.search + t.hash;
-    for (const [e, n] of Object.entries(H)) if (n === t.pathname) return e;
-    return ne(n) || "";
-  } catch {
+    console.log("[L] parsed pathname+search+hash:", n, "| origin:", t.origin, "| app origin:", location.origin);
+    for (const [e, n2] of Object.entries(H)) {
+      if (n2 === t.pathname) {
+        console.log("[L] matched internal lunar:// route:", e, "->", n2);
+        return e;
+      }
+    }
+    const decoded = ne(n) || "";
+    console.log("[L] ne() returned:", decoded || "(empty)");
+    return decoded;
+  } catch (err) {
+    console.warn("[L] URL parse threw (likely cross-origin contentDocument access):", err);
     return "";
   }
 }
@@ -151,17 +167,24 @@ function oe(e, t) {
 function C(e) {
   try {
     const t = e.iframe.contentDocument;
-    if (!t) return;
+    if (!t) {
+      console.log("[C] no contentDocument for tab", e.id);
+      return;
+    }
     const n = t.location.href || "",
       r = oe(t, n);
+    console.log("[C] tab", e.id, "| contentDocument href:", n, "| resolved title:", r);
     r !== e.title && ((e.title = r), S(e, "title"));
     const o = L(n);
+    console.log("[C] tab", e.id, "| L() result:", o || "(empty)");
     o
       ? ie(o).then((t) => {
           t !== e.favicon && ((e.favicon = t), S(e, "icon"));
         })
       : e.favicon !== f && ((e.favicon = f), S(e, "icon"));
-  } catch {}
+  } catch (err) {
+    console.warn("[C] threw (likely cross-origin block):", err);
+  }
 }
 function ae(e) {
   (e.titleTimer && clearInterval(e.titleTimer),
@@ -171,12 +194,21 @@ function ce(e) {
   (C(e), ae(e), (e.isReady = !0), Z(e));
 }
 function Z(e) {
+  console.log("[Z] called for tab", e.id, "| activeTab:", d);
   if (e.id === d && u)
     try {
       const t = e.iframe.contentDocument;
-      if (!t) return;
-      u.value = L(t.location.href || "");
-    } catch {}
+      if (!t) {
+        console.log("[Z] no contentDocument");
+        return;
+      }
+      const raw = t.location.href || "";
+      const decoded = L(raw);
+      console.log("[Z] raw href:", raw, "| L() decoded:", decoded || "(empty)");
+      u.value = decoded;
+    } catch (err) {
+      console.warn("[Z] threw (likely cross-origin):", err);
+    }
 }
 function W(e) {
   if ("A" === e.tagName || "AREA" === e.tagName) {
@@ -213,11 +245,16 @@ function le(e, t) {
       try {
         const e = n.contentWindow,
           t = n.contentDocument;
-        if (!e || !t) return;
+        if (!e || !t) {
+          console.log("[le:load] contentWindow or contentDocument null — likely cross-origin, cannot intercept");
+          return;
+        }
         const r = new URL(t.location.href, location.origin).pathname;
-        console.log(r)
-        console.log(t.location.href)
-        if (Object.values(H).includes(r) || "/new" === r) return;
+        console.log("[le:load] iframe loaded | pathname:", r, "| href:", t.location.href);
+        if (Object.values(H).includes(r) || "/new" === r) {
+          console.log("[le:load] internal route, skipping open/link intercept");
+          return;
+        }
         ((e.open = (e) => (e && X(e.toString()).then((e) => m(e)), null)),
           t.querySelectorAll(D).forEach(k),
           new MutationObserver((e) => {
@@ -245,7 +282,9 @@ function le(e, t) {
             attributes: !0,
             attributeFilter: ["target"],
           }));
-      } catch {}
+      } catch (err) {
+        console.warn("[le:load] threw — cross-origin iframe, cannot access contentDocument:", err);
+      }
     }),
     n
   );
@@ -367,6 +406,7 @@ function I() {
   (y && (clearTimeout(y), (y = null)), ue());
 }
 function m(e) {
+  console.log("[m] openTab called with:", e ?? "(no url, new tab)");
   if (!q) return void V.then(() => m(e));
   const t = te++,
     n = { id: t, title: "New Tab", favicon: f, iframe: null, isReady: !1 };
@@ -384,6 +424,7 @@ function m(e) {
     (o.onerror = I));
 }
 function E(e) {
+  console.log("[E] switchTab to id:", e);
   ((d = e), v && (clearInterval(v), (v = null)), (A = ""));
   for (const t of a)
     t.iframe && t.iframe.classList.toggle("hidden", t.id !== e);
@@ -396,9 +437,15 @@ function E(e) {
           const t = a.find((t) => t.id === e);
           if (!t?.iframe) return;
           const n = t.iframe.contentWindow?.location.href;
+          console.log("[E:poll] tab", e, "| contentWindow.location.href:", n ?? "(null — cross-origin or not loaded)");
           if (!n || n === A) return;
-          ((A = n), u && (u.value = L(n)), C(t), B && B(n));
-        } catch {}
+          ((A = n),
+            u && (u.value = L(n)),
+            console.log("[E:poll] url bar set to:", u?.value),
+            C(t), B && B(n));
+        } catch (err) {
+          console.warn("[E:poll] threw (cross-origin contentWindow access):", err);
+        }
     }, 250)));
 }
 (V.then(() => {
