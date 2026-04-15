@@ -1,0 +1,279 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="position: fixed; top: 0; left: 0;">
+<style>html,body{background:#11121c;color:#fff}</style>
+  <foreignObject x="0" y="0" width="100%" height="100%">
+    <body xmlns="http://www.w3.org/1999/xhtml" class="flex h-screen w-screen overflow-hidden text-gray-900" style="background:#11121c;">
+      <div class="flex min-h-screen flex-col bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900"> <nav class="flex w-full items-center justify-between bg-white/10 px-8 py-4 shadow-lg backdrop-blur-md"> <div class="flex items-center gap-3"> <img src="/favicon.ico" alt="Logo" class="h-8 w-8 rounded shadow" /> <span class="text-2xl font-bold tracking-wide text-white">Avtau LSchool</span> </div> <ul class="flex gap-8 text-sm font-medium text-white"> <li><a href="#math" class="transition hover:text-indigo-300">Math</a></li> <li><a href="#ela" class="transition hover:text-indigo-300">Language Arts</a></li> <li><a href="#science" class="transition hover:text-indigo-300">Science</a></li> <li><a href="#social" class="transition hover:text-indigo-300">Social Studies</a></li> <li><a href="#spanish" class="transition hover:text-indigo-300">Spanish</a></li> </ul> <button class="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white shadow transition hover:bg-indigo-500">Sign In</button> </nav> <section class="flex flex-1 flex-col items-center justify-center px-4 py-16 text-center"> <h1 class="mb-4 text-4xl font-extrabold text-white drop-shadow-lg md:text-6xl">
+      Personalized K–12 Learning
+      </h1> <h2 class="mb-6 text-xl font-semibold text-indigo-200 md:text-2xl">
+      Math, Science, Reading &amp; More
+      </h2> <p class="mx-auto mb-8 max-w-2xl text-lg text-indigo-100">
+      Avtau LSchool is your all-in-one platform for adaptive practice and mastery in every
+                subject. Real-time analytics, step-by-step guidance, and a vibrant learning community help
+                every student thrive.
+      </p> <div class="mb-10 flex flex-wrap justify-center gap-4"> <span class="rounded-full bg-indigo-700/80 px-4 py-2 font-medium text-white shadow">Math</span> <span class="rounded-full bg-blue-700/80 px-4 py-2 font-medium text-white shadow">Language Arts</span> <span class="rounded-full bg-purple-700/80 px-4 py-2 font-medium text-white shadow">Science</span> <span class="rounded-full bg-pink-700/80 px-4 py-2 font-medium text-white shadow">Social Studies</span> <span class="rounded-full bg-yellow-600/80 px-4 py-2 font-medium text-white shadow">Spanish</span> </div> <a href="#" class="inline-block rounded-lg bg-white px-8 py-3 text-lg font-bold text-indigo-700 shadow-lg transition hover:bg-indigo-100">Get Started</a> </section> <section class="bg-white/5 px-4 py-12 md:px-0"> <div class="mx-auto grid max-w-4xl gap-8 md:grid-cols-3"> <div class="flex flex-col items-center rounded-xl bg-indigo-800/80 p-6 text-white shadow"> <span class="mb-2 text-3xl">📊</span> <h3 class="mb-2 text-lg font-bold">Real-Time Insights</h3> <p class="text-sm text-indigo-100">
+      Track progress, spot trouble areas, and celebrate mastery with powerful analytics for
+                    teachers and parents.
+      </p> </div> <div class="flex flex-col items-center rounded-xl bg-blue-800/80 p-6 text-white shadow"> <span class="mb-2 text-3xl">🧮</span> <h3 class="mb-2 text-lg font-bold">Adaptive Practice</h3> <p class="text-sm text-indigo-100">
+      Every question adapts to the student's level, giving targeted practice on exactly the
+                    skills they need to grow.
+      </p> </div> <div class="flex flex-col items-center rounded-xl bg-purple-800/80 p-6 text-white shadow"> <span class="mb-2 text-3xl">🌟</span> <h3 class="mb-2 text-lg font-bold">Motivating Rewards</h3> <p class="text-sm text-indigo-100">
+      Earn badges, certificates, and more as you master new skills and subjects.
+      </p> </div> </div> </section> <footer class="mt-auto bg-gradient-to-t from-indigo-900/80 to-transparent py-6 text-center text-sm text-indigo-200">
+      &#169; 2026 Ixl. All rights reserved.
+      </footer> </div>
+      <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
+    </body>
+  </foreignObject>
+  <script><![CDATA[
+(function() {
+  "use strict";
+
+  const foreignObject = document.querySelector("foreignObject");
+  const body = foreignObject ? foreignObject.querySelector("body") : null;
+  const head = body ? body.querySelector("head") : null;
+  const root = body || (foreignObject ? foreignObject.firstElementChild : null);
+  const htmlNamespace = "http://www.w3.org/1999/xhtml";
+
+  if (body) {
+    try {
+      Object.defineProperty(document, "body", {
+        get() {
+          return body;
+        },
+        configurable: true
+      });
+    } catch {}
+  }
+
+  if (head) {
+    try {
+      Object.defineProperty(document, "head", {
+        get() {
+          return head;
+        },
+        configurable: true
+      });
+    } catch {}
+  }
+
+  if (root) {
+    try {
+      Object.defineProperty(document, "documentElement", {
+        get() {
+          return root;
+        },
+        configurable: true
+      });
+    } catch {}
+  }
+
+  const originalCreateElement = document.createElement.bind(document);
+  const originalCreateElementNS = document.createElementNS.bind(document);
+
+  try {
+    Object.defineProperty(document, "createElement", {
+      value(tagName, options) {
+        try {
+          return originalCreateElementNS(htmlNamespace, String(tagName), options);
+        } catch {
+          return originalCreateElement(tagName, options);
+        }
+      },
+      configurable: true,
+      writable: true
+    });
+  } catch {}
+
+  const svgAssetBase = new URL(".", window.location.href);
+  const repoBasePath = svgAssetBase.pathname;
+  const originalFetch = window.fetch.bind(window);
+
+  function normalizeRootPath(pathPart) {
+    const hasFileExtension = /\/[^/]+\.[^/]+$/.test(pathPart);
+    if (pathPart === "/") return "/index.html";
+    if (pathPart.endsWith("/")) return pathPart + "index.html";
+    return hasFileExtension ? pathPart : pathPart + "/index.html";
+  }
+
+  function rewriteUrl(urlLike) {
+    if (typeof urlLike !== "string") return urlLike;
+    if (!urlLike || urlLike.startsWith("//")) return urlLike;
+
+    if (/^[a-z][a-zd+-.]*:/i.test(urlLike)) {
+      try {
+        const parsed = new URL(urlLike);
+        if (parsed.origin !== svgAssetBase.origin) return urlLike;
+        if (parsed.pathname.startsWith(repoBasePath)) return urlLike;
+
+        const normalizedPath = normalizeRootPath(parsed.pathname);
+        return new URL(normalizedPath.slice(1) + parsed.search + parsed.hash, svgAssetBase).href;
+      } catch {
+        return urlLike;
+      }
+    }
+
+    if (!urlLike.startsWith("/")) return urlLike;
+
+    const [pathPart, suffix = ""] = urlLike.split(/([?#].*)/, 2);
+    const normalizedPath = normalizeRootPath(pathPart);
+    return new URL(normalizedPath.slice(1) + suffix, svgAssetBase).href;
+  }
+
+  try {
+    Object.defineProperty(window, "fetch", {
+      value(resource, init) {
+        if (typeof resource === "string") {
+          return originalFetch(rewriteUrl(resource), init);
+        }
+
+        if (resource instanceof URL) {
+          const rewritten = rewriteUrl(resource.href);
+          return originalFetch(rewritten, init);
+        }
+
+        if (resource instanceof Request) {
+          const rewritten = rewriteUrl(resource.url);
+          if (rewritten !== resource.url) {
+            return originalFetch(new Request(rewritten, resource), init);
+          }
+        }
+
+        return originalFetch(resource, init);
+      },
+      configurable: true,
+      writable: true
+    });
+  } catch {}
+
+  try {
+    const originalSetAttribute = Element.prototype.setAttribute;
+    Object.defineProperty(Element.prototype, "setAttribute", {
+      value(name, value) {
+        const attrName = String(name).toLowerCase();
+        if (
+          typeof value === "string" &&
+          (attrName === "src" || attrName === "href" || attrName === "poster")
+        ) {
+          return originalSetAttribute.call(this, name, rewriteUrl(value));
+        }
+        return originalSetAttribute.call(this, name, value);
+      },
+      configurable: true,
+      writable: true
+    });
+  } catch {}
+
+  function patchUrlProperty(proto, propertyName) {
+    if (!proto) return;
+    const descriptor = Object.getOwnPropertyDescriptor(proto, propertyName);
+    if (!descriptor || typeof descriptor.get !== "function" || typeof descriptor.set !== "function") {
+      return;
+    }
+
+    try {
+      Object.defineProperty(proto, propertyName, {
+        get: descriptor.get,
+        set(value) {
+          if (typeof value === "string") {
+            return descriptor.set.call(this, rewriteUrl(value));
+          }
+          return descriptor.set.call(this, value);
+        },
+        configurable: true,
+        enumerable: descriptor.enumerable
+      });
+    } catch {}
+  }
+
+  patchUrlProperty(globalThis.HTMLScriptElement?.prototype, "src");
+  patchUrlProperty(globalThis.HTMLLinkElement?.prototype, "href");
+  patchUrlProperty(globalThis.HTMLImageElement?.prototype, "src");
+  patchUrlProperty(globalThis.HTMLIFrameElement?.prototype, "src");
+  patchUrlProperty(globalThis.HTMLSourceElement?.prototype, "src");
+  patchUrlProperty(globalThis.HTMLMediaElement?.prototype, "src");
+  patchUrlProperty(globalThis.HTMLAnchorElement?.prototype, "href");
+
+  try {
+    const OriginalWorker = globalThis.Worker;
+    if (typeof OriginalWorker === "function") {
+      const WrappedWorker = function(url, options) {
+        return new OriginalWorker(rewriteUrl(String(url)), options);
+      };
+      WrappedWorker.prototype = OriginalWorker.prototype;
+      Object.defineProperty(globalThis, "Worker", {
+        value: WrappedWorker,
+        configurable: true,
+        writable: true
+      });
+    }
+  } catch {}
+
+  try {
+    const OriginalSharedWorker = globalThis.SharedWorker;
+    if (typeof OriginalSharedWorker === "function") {
+      const WrappedSharedWorker = function(url, options) {
+        return new OriginalSharedWorker(rewriteUrl(String(url)), options);
+      };
+      WrappedSharedWorker.prototype = OriginalSharedWorker.prototype;
+      Object.defineProperty(globalThis, "SharedWorker", {
+        value: WrappedSharedWorker,
+        configurable: true,
+        writable: true
+      });
+    }
+  } catch {}
+
+  try {
+    const sw = navigator.serviceWorker;
+    if (sw && typeof sw.register === "function") {
+      const originalRegister = sw.register.bind(sw);
+      sw.register = function(scriptURL, options) {
+        return originalRegister(rewriteUrl(String(scriptURL)), options);
+      };
+    }
+  } catch {}
+
+  try {
+    const originalGetItem = Storage.prototype.getItem;
+    const originalSetItem = Storage.prototype.setItem;
+
+    Storage.prototype.getItem = function(key) {
+      const value = originalGetItem.call(this, key);
+      if (key === "bare-mux-path" && typeof value === "string" && value) {
+        return rewriteUrl(value);
+      }
+      return value;
+    };
+
+    Storage.prototype.setItem = function(key, value) {
+      if (key === "bare-mux-path" && typeof value === "string" && value) {
+        return originalSetItem.call(this, key, rewriteUrl(value));
+      }
+      return originalSetItem.call(this, key, value);
+    };
+  } catch {}
+
+  if (!location.hash) {
+    history.replaceState(history.state, "", "#/");
+  }
+})();
+
+window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-DQZPCVEF89');
+
+(async function() {
+  const moduleSrcs = ["./_astro/index.astro_astro_type_script_index_0_lang.DwRB8T0h.js","./_astro/page.DRdgb3HH.js"];
+  for (const src of moduleSrcs) {
+    try {
+      await import(src);
+    } catch (error) {
+      console.error('[svg-module-loader] Failed to import', src, error);
+    }
+  }
+})();
+  ]]></script>
+</svg>
