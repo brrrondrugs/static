@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="position: fixed; top: 0; left: 0;">
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none" style="display: block; width: 100vw; height: 100vh;">
 <style>html,body{background:#11121c;color:#fff}</style>
   <foreignObject x="0" y="0" width="100%" height="100%">
     <body xmlns="http://www.w3.org/1999/xhtml" class="flex h-screen w-screen overflow-hidden text-gray-900" style="background:#11121c;">
@@ -95,15 +95,6 @@
     return hasFileExtension ? pathPart : pathPart + "/index.html";
   }
 
-  function looksLikeBareRoute(urlLike) {
-    return (
-      typeof urlLike === "string" &&
-      /^[a-zd/_-]+$/i.test(urlLike) &&
-      !urlLike.startsWith("./") &&
-      !urlLike.startsWith("../")
-    );
-  }
-
   function rewriteUrl(urlLike) {
     if (typeof urlLike !== "string") return urlLike;
     if (!urlLike || urlLike.startsWith("//")) return urlLike;
@@ -121,11 +112,7 @@
       }
     }
 
-    if (!urlLike.startsWith("/")) {
-      if (!looksLikeBareRoute(urlLike)) return urlLike;
-      const normalizedRoute = normalizeRootPath("/" + urlLike.replace(/^/+/, ""));
-      return new URL(normalizedRoute.slice(1), svgAssetBase).href;
-    }
+    if (!urlLike.startsWith("/")) return urlLike;
 
     const [pathPart, suffix = ""] = urlLike.split(/([?#].*)/, 2);
     const normalizedPath = normalizeRootPath(pathPart);
@@ -156,44 +143,6 @@
       configurable: true,
       writable: true
     });
-  } catch {}
-
-  try {
-    const bareMux = globalThis.BareMux;
-    const OriginalConnection = bareMux?.BareMuxConnection;
-    if (typeof OriginalConnection === "function") {
-      const normalizeTransport = value => {
-        if (typeof value !== "string") return value;
-        if (value.startsWith("/") || looksLikeBareRoute(value)) return rewriteUrl(value);
-        return value;
-      };
-
-      class WrappedBareMuxConnection extends OriginalConnection {
-        constructor(workerPath, ...rest) {
-          super(normalizeTransport(workerPath), ...rest);
-        }
-
-        async setTransport(transportPath, options) {
-          return super.setTransport(normalizeTransport(transportPath), options);
-        }
-
-        async getTransport(...args) {
-          const value = await super.getTransport(...args);
-          if (typeof value !== "string") return value;
-          if (value.startsWith(svgAssetBase.origin)) {
-            try {
-              const parsed = new URL(value);
-              return parsed.pathname.replace(repoBasePath.replace(//$/, ""), "") || value;
-            } catch {
-              return value;
-            }
-          }
-          return value;
-        }
-      }
-
-      bareMux.BareMuxConnection = WrappedBareMuxConnection;
-    }
   } catch {}
 
   try {
@@ -306,12 +255,6 @@
 
   if (!location.hash) {
     history.replaceState(history.state, "", "#/");
-  }
-
-  if (body) {
-    body.style.margin = "0";
-    body.style.width = "100%";
-    body.style.height = "100%";
   }
 })();
 
