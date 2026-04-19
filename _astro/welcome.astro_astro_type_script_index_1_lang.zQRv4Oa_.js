@@ -1,0 +1,1 @@
+import{C as o}from"./welcome.astro_astro_type_script_index_0_lang.C9eInzAq.js";import{SettingsManager as i}from"./st.BKRFnZ1h.js";const e=Event.prototype.stopImmediatePropagation;Event.prototype.stopImmediatePropagation=function(...t){if(this.type!=="beforeunload")return e.apply(this,t)};await Promise.all([o.init(),i.init()]);
