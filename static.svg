@@ -20,6 +20,14 @@
     "/st": "./st.html",
     "/math": "./math.html"
   };
+  var basePath = "/";
+  try {
+    var currentPath = (window.location && window.location.pathname) || "/";
+    basePath = currentPath.slice(0, currentPath.lastIndexOf("/") + 1) || "/";
+  } catch (_) {}
+  var withBase = function(pathname) {
+    return basePath + String(pathname || "").replace(/^/+/, "");
+  };
   var toStaticUrl = function(input) {
     if (!input) return input;
     var raw = String(input);
@@ -41,10 +49,15 @@
     try {
       var parsed = new URL(raw, window.location.href);
       var isAbsoluteHttp = lower.startsWith("http://") || lower.startsWith("https://") || lower.startsWith("//");
-      if (isAbsoluteHttp && parsed.origin !== window.location.origin) return raw;
-      if (parsed.pathname && parsed.pathname.startsWith('/')) {
-        var mappedAbs = pageMap[parsed.pathname] || ("." + parsed.pathname);
-        return mappedAbs + (parsed.search || "") + (parsed.hash || "");
+      if (isAbsoluteHttp) {
+        if (parsed.origin !== window.location.origin) return raw;
+        if (parsed.pathname && parsed.pathname.startsWith(basePath)) return raw;
+        if (parsed.pathname && parsed.pathname.startsWith('/')) {
+          var mappedAbsPath = pageMap[parsed.pathname]
+            ? withBase(pageMap[parsed.pathname])
+            : withBase(parsed.pathname);
+          return parsed.origin + mappedAbsPath + (parsed.search || "") + (parsed.hash || "");
+        }
       }
     } catch (_) {}
 
@@ -56,7 +69,9 @@
     if (hashIndex !== -1 && hashIndex < cut) cut = hashIndex;
     var pathname = raw.slice(0, cut);
     var suffix = raw.slice(cut);
-    var mapped = pageMap[pathname] || ("." + pathname);
+    var mapped = pageMap[pathname]
+      ? withBase(pageMap[pathname])
+      : withBase(pathname);
     return mapped + suffix;
   };
 
@@ -151,6 +166,9 @@
   body.prepend(head);
   var base = document.createElementNS(ns, "base");
   var baseHref = "./";
+  try {
+    baseHref = new URL(".", window.location.href).href;
+  } catch (_) {}
   base.setAttribute("href", baseHref);
   head.appendChild(base);
   Object.defineProperty(document, "head", {
