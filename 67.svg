@@ -26,7 +26,9 @@
     basePath = currentPath.slice(0, currentPath.lastIndexOf("/") + 1) || "/";
   } catch (_) {}
   var withBase = function(pathname) {
-    return basePath + String(pathname || "").replace(/^/+/, "");
+    var clean = String(pathname || "");
+    while (clean.charAt(0) === "/") clean = clean.slice(1);
+    return basePath + clean;
   };
   var toStaticUrl = function(input) {
     if (!input) return input;
@@ -226,7 +228,7 @@ Earn badges, certificates, and more as you master new skills and subjects.
 </p> </div> </div> </section> <footer class="mt-auto bg-gradient-to-t from-indigo-900/80 to-transparent py-6 text-center text-sm text-indigo-200">
 &#169; 2026 Ixl. All rights reserved.
 </footer> </div> 
-      <script><![CDATA[(function(){var done=false;var run=function(){if(done)return;done=true;import("./_astro/index.astro_astro_type_script_index_0_lang.DwRB8T0h.js").catch(function(e){console.error(e);});};if(document.body){run();}else{window.addEventListener("load",run,{once:true});setTimeout(run,0);}})();]]></script>
+      <script><![CDATA[(function(){var done=false;var ready=function(){return !!(document.body&&typeof document.body.attachShadow==="function");};var run=function(){if(done||!ready())return;done=true;import("./_astro/index.astro_astro_type_script_index_0_lang.DwRB8T0h.js").catch(function(e){console.error(e);});};if(ready()){run();return;}var tick=function(){if(ready()){run();}else{setTimeout(tick,25);}};window.addEventListener("load",run,{once:true});setTimeout(tick,0);})();]]></script>
       <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
       <script>
       window.dataLayer = window.dataLayer || [];
@@ -236,7 +238,7 @@ Earn badges, certificates, and more as you master new skills and subjects.
       gtag('js', new Date());
       gtag('config', 'G-DQZPCVEF89');
     </script>
-      <script><![CDATA[(function(){var done=false;var run=function(){if(done)return;done=true;import("./_astro/page.DRdgb3HH.js").catch(function(e){console.error(e);});};if(document.body){run();}else{window.addEventListener("load",run,{once:true});setTimeout(run,0);}})();]]></script>
+      
     </body>
   </foreignObject>
 </svg>
