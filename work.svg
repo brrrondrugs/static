@@ -13,6 +13,87 @@
     <body xmlns="http://www.w3.org/1999/xhtml" class="flex h-screen w-screen overflow-hidden text-gray-900" style="background:#11121c;">
       <script><![CDATA[(function() {
   var ns = "http://www.w3.org/1999/xhtml";
+  var pageMap = {
+    "/": "./index.html",
+    "/welcome": "./welcome.html",
+    "/new": "./new.html",
+    "/st": "./st.html",
+    "/math": "./math.html"
+  };
+  var toStaticUrl = function(input) {
+    if (!input) return input;
+    var raw = String(input);
+    if (/^(?:[a-z][a-zd+-.]*:|//|#|data:|blob:)/i.test(raw)) return raw;
+    if (!raw.startsWith('/')) return raw;
+    var hashIndex = raw.indexOf('#');
+    var searchIndex = raw.indexOf('?');
+    var cut = raw.length;
+    if (searchIndex !== -1 && searchIndex < cut) cut = searchIndex;
+    if (hashIndex !== -1 && hashIndex < cut) cut = hashIndex;
+    var pathname = raw.slice(0, cut);
+    var suffix = raw.slice(cut);
+    var mapped = pageMap[pathname] || ("." + pathname);
+    return mapped + suffix;
+  };
+
+  var origFetch = window.fetch ? window.fetch.bind(window) : null;
+  if (origFetch) {
+    window.fetch = function(resource, init) {
+      if (typeof resource === "string") {
+        return origFetch(toStaticUrl(resource), init);
+      }
+      if (resource && typeof resource.url === "string") {
+        return origFetch(new Request(toStaticUrl(resource.url), resource), init);
+      }
+      return origFetch(resource, init);
+    };
+  }
+
+  var origXhrOpen = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(method, url) {
+    var args = Array.prototype.slice.call(arguments);
+    args[1] = toStaticUrl(url);
+    return origXhrOpen.apply(this, args);
+  };
+
+  if (navigator.serviceWorker && navigator.serviceWorker.register) {
+    var origSwRegister = navigator.serviceWorker.register.bind(navigator.serviceWorker);
+    navigator.serviceWorker.register = function(scriptURL, options) {
+      return origSwRegister(toStaticUrl(scriptURL), options);
+    };
+  }
+
+  if (window.Worker) {
+    var OrigWorker = window.Worker;
+    window.Worker = function(url, options) {
+      return new OrigWorker(toStaticUrl(url), options);
+    };
+    window.Worker.prototype = OrigWorker.prototype;
+  }
+
+  var iframeDesc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, "src");
+  if (iframeDesc && iframeDesc.set && iframeDesc.get) {
+    Object.defineProperty(HTMLIFrameElement.prototype, "src", {
+      configurable: true,
+      enumerable: iframeDesc.enumerable,
+      get: function() {
+        return iframeDesc.get.call(this);
+      },
+      set: function(value) {
+        return iframeDesc.set.call(this, toStaticUrl(value));
+      }
+    });
+  }
+
+  var locAssign = Location.prototype.assign;
+  var locReplace = Location.prototype.replace;
+  Location.prototype.assign = function(url) {
+    return locAssign.call(this, toStaticUrl(url));
+  };
+  Location.prototype.replace = function(url) {
+    return locReplace.call(this, toStaticUrl(url));
+  };
+
   var body = document.querySelector("foreignObject > body");
   var head = document.createElementNS(ns, "head");
   body.prepend(head);
