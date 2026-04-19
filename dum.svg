@@ -63,7 +63,7 @@
        <div class="flex min-h-screen flex-col bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900"> <nav class="flex w-full items-center justify-between bg-white/10 px-8 py-4 shadow-lg backdrop-blur-md"> <div class="flex items-center gap-3"> <img src="/favicon.ico" alt="Logo" class="h-8 w-8 rounded shadow" /> <span class="text-2xl font-bold tracking-wide text-white">Avtau LSchool</span> </div> <ul class="flex gap-8 text-sm font-medium text-white"> <li><a href="#math" class="transition hover:text-indigo-300">Math</a></li> <li><a href="#ela" class="transition hover:text-indigo-300">Language Arts</a></li> <li><a href="#science" class="transition hover:text-indigo-300">Science</a></li> <li><a href="#social" class="transition hover:text-indigo-300">Social Studies</a></li> <li><a href="#spanish" class="transition hover:text-indigo-300">Spanish</a></li> </ul> <button class="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white shadow transition hover:bg-indigo-500">Sign In</button> </nav> <section class="flex flex-1 flex-col items-center justify-center px-4 py-16 text-center"> <h1 class="mb-4 text-4xl font-extrabold text-white drop-shadow-lg md:text-6xl">
 Personalized K–12 Learning
 </h1> <h2 class="mb-6 text-xl font-semibold text-indigo-200 md:text-2xl">
-Math, Science, Reading & More
+Math, Science, Reading &amp; More
 </h2> <p class="mx-auto mb-8 max-w-2xl text-lg text-indigo-100">
 Avtau LSchool is your all-in-one platform for adaptive practice and mastery in every
           subject. Real-time analytics, step-by-step guidance, and a vibrant learning community help
