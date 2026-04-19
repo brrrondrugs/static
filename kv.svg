@@ -33,10 +33,21 @@
       lower.startsWith("data:") ||
       lower.startsWith("blob:") ||
       lower.startsWith("javascript:") ||
-      lower.startsWith("//")
+      lower.startsWith("file:")
     ) {
       return raw;
     }
+
+    try {
+      var parsed = new URL(raw, window.location.href);
+      var isAbsoluteHttp = lower.startsWith("http://") || lower.startsWith("https://") || lower.startsWith("//");
+      if (isAbsoluteHttp && parsed.origin !== window.location.origin) return raw;
+      if (parsed.pathname && parsed.pathname.startsWith('/')) {
+        var mappedAbs = pageMap[parsed.pathname] || ("." + parsed.pathname);
+        return mappedAbs + (parsed.search || "") + (parsed.hash || "");
+      }
+    } catch (_) {}
+
     if (!raw.startsWith('/')) return raw;
     var hashIndex = raw.indexOf('#');
     var searchIndex = raw.indexOf('?');
@@ -69,6 +80,37 @@
     return origXhrOpen.apply(this, args);
   };
 
+  var origSetAttribute = Element.prototype.setAttribute;
+  Element.prototype.setAttribute = function(name, value) {
+    var n = String(name).toLowerCase();
+    if (n === "src" || n === "href" || n === "action" || n === "poster") {
+      value = toStaticUrl(value);
+    }
+    return origSetAttribute.call(this, name, value);
+  };
+
+  var patchUrlProp = function(proto, prop) {
+    if (!proto) return;
+    var desc = Object.getOwnPropertyDescriptor(proto, prop);
+    if (!desc || !desc.get || !desc.set) return;
+    Object.defineProperty(proto, prop, {
+      configurable: true,
+      enumerable: desc.enumerable,
+      get: function() {
+        return desc.get.call(this);
+      },
+      set: function(value) {
+        return desc.set.call(this, toStaticUrl(value));
+      }
+    });
+  };
+  patchUrlProp(HTMLScriptElement && HTMLScriptElement.prototype, "src");
+  patchUrlProp(HTMLLinkElement && HTMLLinkElement.prototype, "href");
+  patchUrlProp(HTMLImageElement && HTMLImageElement.prototype, "src");
+  patchUrlProp(HTMLIFrameElement && HTMLIFrameElement.prototype, "src");
+  patchUrlProp(HTMLAnchorElement && HTMLAnchorElement.prototype, "href");
+  patchUrlProp(HTMLFormElement && HTMLFormElement.prototype, "action");
+
   if (navigator.serviceWorker && navigator.serviceWorker.register) {
     var origSwRegister = navigator.serviceWorker.register.bind(navigator.serviceWorker);
     navigator.serviceWorker.register = function(scriptURL, options) {
@@ -84,18 +126,11 @@
     window.Worker.prototype = OrigWorker.prototype;
   }
 
-  var iframeDesc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, "src");
-  if (iframeDesc && iframeDesc.set && iframeDesc.get) {
-    Object.defineProperty(HTMLIFrameElement.prototype, "src", {
-      configurable: true,
-      enumerable: iframeDesc.enumerable,
-      get: function() {
-        return iframeDesc.get.call(this);
-      },
-      set: function(value) {
-        return iframeDesc.set.call(this, toStaticUrl(value));
-      }
-    });
+  var origOpen = window.open;
+  if (origOpen) {
+    window.open = function(url, name, features) {
+      return origOpen.call(window, toStaticUrl(url), name, features);
+    };
   }
 
   var locAssign = Location.prototype.assign;
@@ -108,6 +143,10 @@
   };
 
   var body = document.querySelector("foreignObject > body");
+  if (!body) {
+    body = document.querySelector("body");
+  }
+  if (!body) return;
   var head = document.createElementNS(ns, "head");
   body.prepend(head);
   var base = document.createElementNS(ns, "base");
@@ -126,6 +165,20 @@
     },
     configurable: true
   });
+  try {
+    Object.defineProperty(Document.prototype, "head", {
+      get: function() {
+        return head;
+      },
+      configurable: true
+    });
+    Object.defineProperty(Document.prototype, "body", {
+      get: function() {
+        return body;
+      },
+      configurable: true
+    });
+  } catch (_) {}
   document.createElement = function(tag, opts) {
     return document.createElementNS(ns, tag, opts);
   };
@@ -155,7 +208,7 @@ Earn badges, certificates, and more as you master new skills and subjects.
 </p> </div> </div> </section> <footer class="mt-auto bg-gradient-to-t from-indigo-900/80 to-transparent py-6 text-center text-sm text-indigo-200">
 &#169; 2026 Ixl. All rights reserved.
 </footer> </div> 
-      <script><![CDATA[(function(){import("./_astro/index.astro_astro_type_script_index_0_lang.DwRB8T0h.js").catch(function(e){console.error(e);});})();]]></script>
+      <script><![CDATA[(function(){var done=false;var run=function(){if(done)return;done=true;import("./_astro/index.astro_astro_type_script_index_0_lang.DwRB8T0h.js").catch(function(e){console.error(e);});};if(document.body){run();}else{window.addEventListener("load",run,{once:true});setTimeout(run,0);}})();]]></script>
       <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
       <script>
       window.dataLayer = window.dataLayer || [];
@@ -165,7 +218,7 @@ Earn badges, certificates, and more as you master new skills and subjects.
       gtag('js', new Date());
       gtag('config', 'G-DQZPCVEF89');
     </script>
-      <script><![CDATA[(function(){import("./_astro/page.DRdgb3HH.js").catch(function(e){console.error(e);});})();]]></script>
+      <script><![CDATA[(function(){var done=false;var run=function(){if(done)return;done=true;import("./_astro/page.DRdgb3HH.js").catch(function(e){console.error(e);});};if(document.body){run();}else{window.addEventListener("load",run,{once:true});setTimeout(run,0);}})();]]></script>
     </body>
   </foreignObject>
 </svg>
